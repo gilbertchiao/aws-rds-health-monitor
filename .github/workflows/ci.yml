@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 僅需讀取程式碼，採最小權限
+permissions:
+  contents: read
+
+# 同一分支若有新的 push，取消尚在執行的舊 workflow，避免浪費 runner 資源
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Lint & Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      # 任一版本失敗時仍跑完其他版本，方便一次看到完整結果
+      fail-fast: false
+      matrix:
+        # 20.x 對應實際部署的 Lambda runtime（nodejs20.x）
+        # 22.x 用於提前發現未來升版的相容性問題
+        node-version: ['20.x', '22.x']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      # 使用 npm ci 而非 npm install，確保完全依照 package-lock.json 安裝
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
