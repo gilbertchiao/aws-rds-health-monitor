@@ -1,5 +1,6 @@
-const { RDSClient, DescribeDBInstancesCommand } = require('@aws-sdk/client-rds');
-const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+// 只取用於取得 mock send 方法的 client；Command 類別由下方 jest.mock 直接定義，不需匯入
+const { RDSClient } = require('@aws-sdk/client-rds');
+const { SESClient } = require('@aws-sdk/client-ses');
 const { handler } = require('../index');
 
 // Mock the RDSClient and its send method
@@ -9,7 +10,7 @@ jest.mock('@aws-sdk/client-rds', () => {
     RDSClient: jest.fn().mockImplementation(() => ({
       send: mockSend
     })),
-    DescribeDBInstancesCommand: jest.fn().mockImplementation((params) => params)
+    DescribeDBInstancesCommand: jest.fn().mockImplementation(params => params)
   };
 });
 
@@ -20,7 +21,7 @@ jest.mock('@aws-sdk/client-ses', () => {
     SESClient: jest.fn().mockImplementation(() => ({
       send: mockSend
     })),
-    SendEmailCommand: jest.fn().mockImplementation((params) => params)
+    SendEmailCommand: jest.fn().mockImplementation(params => params)
   };
 });
 

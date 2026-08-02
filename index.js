@@ -9,7 +9,7 @@ const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
  * @param {string} email - Email address to validate
  * @returns {boolean} - True if email is valid, false otherwise
  */
-const isValidEmail = (email) => {
+const isValidEmail = email => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
@@ -19,7 +19,7 @@ const isValidEmail = (email) => {
  * @param {Array} instances - Array of RDS instance information
  * @returns {Promise<Object>} - Promise resolving to the SES send result
  */
-const sendStatusEmail = async (instances) => {
+const sendStatusEmail = async instances => {
   // Get email recipients from environment variable
   const allRecipients = process.env.EMAIL_RECIPIENTS ? process.env.EMAIL_RECIPIENTS.split(',') : [];
 
@@ -90,26 +90,26 @@ const sendStatusEmail = async (instances) => {
   const params = {
     Source: process.env.EMAIL_SENDER || 'no-reply@example.com',
     Destination: {
-      ToAddresses: recipients,
+      ToAddresses: recipients
     },
     Message: {
       Subject: {
         Data: 'RDS Instance Status Report',
-        Charset: 'UTF-8',
+        Charset: 'UTF-8'
       },
       Body: {
         Html: {
           Data: htmlBody,
-          Charset: 'UTF-8',
+          Charset: 'UTF-8'
         },
         Text: {
           Data: `RDS Instance Status Report\n\n${instances.map(instance =>
             `${instance.identifier}: ${instance.status} (${instance.engine} ${instance.engineVersion}, ${instance.allocatedStorage} GB)`
           ).join('\n')}`,
-          Charset: 'UTF-8',
-        },
-      },
-    },
+          Charset: 'UTF-8'
+        }
+      }
+    }
   };
 
   try {
@@ -125,11 +125,15 @@ const sendStatusEmail = async (instances) => {
 
 /**
  * Monitors RDS instances and returns their status
- * @param {Object} event - AWS Lambda event object
- * @param {Object} context - AWS Lambda context object
+ *
+ * 注意：event 與 context 是 AWS Lambda 的固定 handler 簽章，本函式雖然沒有用到，
+ * 仍必須保留位置，故以底線開頭命名，讓 no-unused-vars 略過檢查。
+ *
+ * @param {Object} _event - AWS Lambda event object（未使用）
+ * @param {Object} _context - AWS Lambda context object（未使用）
  * @returns {Promise<Object>} - Promise resolving to an object containing RDS instance statuses
  */
-exports.handler = async (event, context) => {
+exports.handler = async (_event, _context) => {
   try {
     const rdsClient = new RDSClient();
 
