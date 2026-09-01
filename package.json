@@ -19,13 +19,13 @@
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
-    "@aws-sdk/client-rds": "^3.1100.0",
-    "@aws-sdk/client-ses": "^3.1100.0"
+    "@aws-sdk/client-rds": "^3.1121.0",
+    "@aws-sdk/client-ses": "^3.1121.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.8.0",
-    "globals": "^17.8.0",
-    "jest": "^30.4.2"
+    "eslint": "^10.9.1",
+    "globals": "^17.11.0",
+    "jest": "^30.5.0"
   }
 }
