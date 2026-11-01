@@ -17,6 +17,9 @@
   ],
   "author": "Gilbert Chiao",
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "type": "commonjs",
   "dependencies": {
     "@aws-sdk/client-rds": "^3.1141.0",

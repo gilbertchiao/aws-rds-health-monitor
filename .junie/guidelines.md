@@ -5,7 +5,7 @@ This document provides guidelines and instructions for developing and maintainin
 ## Build/Configuration Instructions
 
 ### Prerequisites
-- Node.js (v20.x or later required)
+- Node.js (v24.x, matching the Lambda `nodejs24.x` runtime)
 - npm (v6.x or later)
 - AWS CLI configured with appropriate permissions
 
@@ -65,7 +65,7 @@ To deploy the Lambda function to AWS:
    ```bash
    aws lambda create-function \
      --function-name rds-health-monitor \
-     --runtime nodejs20.x \
+     --runtime nodejs24.x \
      --handler index.handler \
      --zip-file fileb://function.zip \
      --role arn:aws:iam::<account-id>:role/<role-name>

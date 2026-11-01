@@ -24,9 +24,9 @@ jobs:
       # 任一版本失敗時仍跑完其他版本，方便一次看到完整結果
       fail-fast: false
       matrix:
-        # 20.x 對應實際部署的 Lambda runtime（nodejs20.x）
-        # 22.x 用於提前發現未來升版的相容性問題
-        node-version: ['20.x', '22.x']
+        # 24.x 對應實際部署的 Lambda runtime（nodejs24.x）
+        # 22.x 保留作為向下相容性驗證（Lambda nodejs22.x 支援至 2027-04-30）
+        node-version: ['22.x', '24.x']
 
     steps:
       - name: Checkout repository

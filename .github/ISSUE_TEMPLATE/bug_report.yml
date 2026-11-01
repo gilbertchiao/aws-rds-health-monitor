@@ -47,7 +47,7 @@ body:
     id: runtime
     attributes:
       label: Lambda runtime / Node.js version
-      placeholder: e.g. nodejs20.x
+      placeholder: e.g. nodejs24.x
   - type: input
     id: region
     attributes:

@@ -12,7 +12,7 @@ single-purpose Lambda function, so contributions are expected to stay focused.
 
 ## Development Setup
 
-Requirements: Node.js 20.x or later (matches the Lambda runtime) and npm.
+Requirements: Node.js 24.x (matches the Lambda `nodejs24.x` runtime) and npm.
 
 ```bash
 git clone https://github.com/gilbertchiao/aws-rds-health-monitor.git
@@ -30,7 +30,7 @@ Tests mock the AWS SDK, so no AWS credentials are needed to run them.
 2. Keep each pull request focused on one change.
 3. Add or update tests in `tests/` for any behaviour change.
 4. Make sure `npm run lint` and `npm test` pass locally. CI runs both on
-   Node 20.x and 22.x and must be green before merging.
+   Node 22.x and 24.x and must be green before merging.
 5. Do not commit `node_modules/`, `coverage/`, `function.zip` or any `.env` files.
 
 ## Code Style

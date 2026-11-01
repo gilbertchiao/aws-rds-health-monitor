@@ -14,7 +14,7 @@ The function is designed to be scheduled to run periodically (e.g., daily) to pr
 
 ## Prerequisites
 
-- Node.js (v20.x or later)
+- Node.js (v24.x, matching the Lambda `nodejs24.x` runtime)
 - npm (v6.x or later)
 - AWS CLI configured with appropriate permissions
 - An AWS account with access to Lambda, RDS, and SES services
@@ -105,7 +105,7 @@ Ensure that:
 ```bash
 aws lambda create-function \
   --function-name rds-health-monitor \
-  --runtime nodejs20.x \
+  --runtime nodejs24.x \
   --handler index.handler \
   --zip-file fileb://function.zip \
   --role arn:aws:iam::<account-id>:role/<role-name> \
