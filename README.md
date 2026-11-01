@@ -122,17 +122,52 @@ aws lambda update-function-code \
 
 ### Setting Up a Schedule
 
-To run the function on a schedule, create an EventBridge (CloudWatch Events) rule:
+To run the function periodically, use **Amazon EventBridge Scheduler** (the
+successor to EventBridge Rules for scheduled invocations; it supports time zones,
+flexible time windows and does not require a Lambda resource-based policy).
 
-```bash
-aws events put-rule \
-  --name daily-rds-health-monitor \
-  --schedule-expression "rate(1 day)"
+1. Create an IAM role that EventBridge Scheduler can assume to invoke the function:
 
-aws events put-targets \
-  --rule daily-rds-health-monitor \
-  --targets "Id"="1","Arn"="arn:aws:lambda:<region>:<account-id>:function:rds-monitor"
-```
+   ```bash
+   aws iam create-role \
+     --role-name rds-health-monitor-scheduler-role \
+     --assume-role-policy-document '{
+       "Version": "2012-10-17",
+       "Statement": [{
+         "Effect": "Allow",
+         "Principal": { "Service": "scheduler.amazonaws.com" },
+         "Action": "sts:AssumeRole"
+       }]
+     }'
+
+   aws iam put-role-policy \
+     --role-name rds-health-monitor-scheduler-role \
+     --policy-name invoke-rds-health-monitor \
+     --policy-document '{
+       "Version": "2012-10-17",
+       "Statement": [{
+         "Effect": "Allow",
+         "Action": "lambda:InvokeFunction",
+         "Resource": "arn:aws:lambda:<region>:<account-id>:function:rds-health-monitor"
+       }]
+     }'
+   ```
+
+2. Create the schedule (this example runs daily at 09:00 Asia/Taipei):
+
+   ```bash
+   aws scheduler create-schedule \
+     --name daily-rds-health-monitor \
+     --schedule-expression "cron(0 9 * * ? *)" \
+     --schedule-expression-timezone "Asia/Taipei" \
+     --flexible-time-window '{"Mode": "OFF"}' \
+     --target '{
+       "Arn": "arn:aws:lambda:<region>:<account-id>:function:rds-health-monitor",
+       "RoleArn": "arn:aws:iam::<account-id>:role/rds-health-monitor-scheduler-role"
+     }'
+   ```
+
+   Use `--schedule-expression "rate(1 day)"` instead if you do not need a fixed time of day.
 
 ## Testing
 
